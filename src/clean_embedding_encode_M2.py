@@ -10,7 +10,7 @@ import numpy as np
 # ==========================================================
 
 
-df = pd.read_csv("C:/Users/HP/PycharmProjects/placement_prediction/dataset/clean_target_encode_M2.csv")
+df = pd.read_csv("/dataset/clean_target_encode_M2.csv")
 
 
 # Create copy

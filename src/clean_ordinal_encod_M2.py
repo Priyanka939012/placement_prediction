@@ -14,7 +14,7 @@ from sklearn.impute import SimpleImputer
 # ==========================================================
 
 
-df = pd.read_csv("C:/Users/HP/PycharmProjects/placement_prediction/dataset/placement_predict_50K_Raw.csv")
+df = pd.read_csv("/dataset/placement_predict_50K_Raw.csv")
 
 
 # Create a copy for processing
