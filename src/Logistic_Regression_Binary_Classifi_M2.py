@@ -8,42 +8,28 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, confusion_matrix
 
-
-
-
 # ============================================================
 # 1. SETTINGS
-# ============================================================
-
+# ===========================================================
 
 DATASET = "C:/Users/HP/PycharmProjects/Placement_prediction/dataset/final_preprocess_M2.csv"
 OUTPUT_FOLDER = "C:/Users/HP/PycharmProjects/Placement_prediction/outputs/Logistic_Regression_Binary_Classify_M2"
 
-
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
-
-
-
 
 # ============================================================
 # 2. LOAD PLACEMENT DATASET
 # ============================================================
 
-
 df = pd.read_csv(DATASET)
-
 
 print("\n========== DATASET ==========")
 print(df.head())
 print("\nColumns:")
 print(df.columns.tolist())
 
-
 print("\nDataset shape:")
 print(df.shape)
-
-
-
 
 # ============================================================
 # 3. SELECT FEATURES AND TARGET
@@ -52,22 +38,14 @@ print(df.shape)
 
 # Change these column names if your CSV uses different names.
 
-
 FEATURES = ["CGPA", "HistoryOfBacklogs", "Internships"]
 TARGET = "PlacementStatus"
-
 
 X = df[FEATURES].values
 y = df[TARGET].values
 
-
-
-
 # Make sure target is integer 0/1
 y = y.astype(int)
-
-
-
 
 print("\nFeatures:", FEATURES)
 print("Target:", TARGET)
@@ -75,9 +53,6 @@ print("Target:", TARGET)
 
 print("\nTarget distribution:")
 print(pd.Series(y).value_counts())
-
-
-
 
 # ============================================================
 # 4. SPLIT DATA
@@ -118,23 +93,17 @@ def sigmoid(z):
    """
    Sigmoid:
 
-
             1
    σ(z) = -------
           1 + e^(-z)
 
-
    Converts the linear score into probability.
    """
-
 
    z = np.clip(z, -500, 500)
 
 
    return 1 / (1 + np.exp(-z))
-
-
-
 
 # ============================================================
 # 7. SIGMOID GRAPH
@@ -191,8 +160,6 @@ plt.savefig(
 plt.show()
 
 
-
-
 # ============================================================
 # 8. CROSS-ENTROPY LOSS
 # ============================================================
@@ -208,9 +175,7 @@ def cross_entropy_loss(y_true, y_probability):
        ]
    """
 
-
    epsilon = 1e-15
-
 
    y_probability = np.clip(
        y_probability,
@@ -224,48 +189,32 @@ def cross_entropy_loss(y_true, y_probability):
        +
        (1 - y_true) * np.log(1 - y_probability)
    )
-
-
    return loss
-
-
-
 
 # ============================================================
 # 9. INITIALIZE LOGISTIC REGRESSION
 # ============================================================
 
-
 number_of_features = X_train_scaled.shape[1]
 
-
 weights = np.zeros(number_of_features)
-
 
 bias = 0.0
 
 
 learning_rate = 0.05
 
-
 epochs = 3000
 
-
 loss_history = []
-
-
-
 
 # ============================================================
 # 10. TRAIN USING GRADIENT DESCENT
 # ============================================================
 
-
 m = len(y_train)
 
-
 for epoch in range(epochs):
-
 
    # --------------------------------------------------------
    # Linear model
@@ -297,10 +246,7 @@ for epoch in range(epochs):
        y_train,
        probability
    )
-
-
    loss_history.append(loss)
-
 
    # --------------------------------------------------------
    # Gradients
@@ -351,8 +297,6 @@ for feature, weight in zip(FEATURES, weights):
 print(f"Bias: {bias:.6f}")
 
 
-
-
 # ============================================================
 # 12. CROSS-ENTROPY LOSS GRAPH
 # ============================================================
@@ -367,7 +311,6 @@ plt.plot(
    color="purple",
    linewidth=2
 )
-
 
 plt.xlabel("Epoch")
 plt.ylabel("Cross-Entropy Loss")
@@ -400,20 +343,15 @@ plt.show()
 # 13. PREDICTION FUNCTIONS
 # ============================================================
 
-
 def predict_probability(X):
    """
    Calculate placement probability.
    """
 
-
    z = np.dot(X, weights) + bias
 
 
    return sigmoid(z)
-
-
-
 
 def predict(X, threshold=0.5):
    """
@@ -424,19 +362,15 @@ def predict(X, threshold=0.5):
    probability < 0.5  -> Not Placed
    """
 
-
    probability = predict_probability(X)
 
 
    return (probability >= threshold).astype(int)
 
 
-
-
 # ============================================================
 # 14. TEST SET PREDICTION
 # ============================================================
-
 
 test_probability = predict_probability(
    X_test_scaled
@@ -453,7 +387,6 @@ y_pred = predict(
 # ============================================================
 # 15. ACCURACY
 # ============================================================
-
 
 accuracy = accuracy_score(
    y_test,
@@ -474,7 +407,6 @@ print(
 # ============================================================
 # 16. CONFUSION MATRIX
 # ============================================================
-
 
 cm = confusion_matrix(
    y_test,
@@ -513,7 +445,6 @@ plt.yticks(
 plt.xlabel("Predicted")
 plt.ylabel("Actual")
 
-
 plt.title("Confusion Matrix")
 
 
@@ -542,8 +473,6 @@ plt.savefig(
 
 
 plt.show()
-
-
 
 
 # ============================================================
@@ -576,9 +505,6 @@ plt.show()
 # We visualize a 2D cross-section by fixing
 # Internship = 0.
 
-
-
-
 # ============================================================
 # 18. CREATE CGPA- GRID
 # ============================================================
@@ -602,9 +528,6 @@ CGPA, HistoryOfBacklogs = np.meshgrid(
    cgpa_values,
    historyofbacklogs_values
 )
-
-
-
 
 # Fix Internships = 0
 INTERNSHIP = np.zeros_like(CGPA)
@@ -637,9 +560,6 @@ grid_probability = predict_probability(
 grid_probability = grid_probability.reshape(
    CGPA.shape
 )
-
-
-
 
 # ============================================================
 # 19. PLOT DECISION BOUNDARY
@@ -798,7 +718,6 @@ results = pd.DataFrame({
    "Placement_Probability": test_probability
 })
 
-
 results.to_csv(
    os.path.join(
        OUTPUT_FOLDER,
@@ -806,8 +725,6 @@ results.to_csv(
    ),
    index=False
 )
-
-
 
 
 # ============================================================
@@ -829,15 +746,12 @@ print(
    os.path.abspath(OUTPUT_FOLDER)
 )
 
-
 print("\nGenerated images:")
-
 
 print("1. 01_sigmoid.png")
 print("2. 02_cross_entropy_loss.png")
 print("3. 03_confusion_matrix.png")
 print("4. 04_decision_boundary_hyperplane.png")
-
 
 print("\nPrediction results:")
 print("5. prediction_results.csv")
